@@ -44,6 +44,8 @@ public class MovieControllerTest {
 
     }
 
+
+    // To convert Movie object to JSON content (adding "" and {, } )
     public static String asJsonString(final Object obj) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
@@ -181,8 +183,5 @@ public class MovieControllerTest {
                 .andExpect(jsonPath("$.message").value("Movie DOESN'T Exists"))
                 .andDo(print());
     }
-
-
-
 
 }

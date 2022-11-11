@@ -1,6 +1,5 @@
 package com.spring.junit.exception.movie.JunitExceptionsMovieAssignment.controller;
 
-import com.mongodb.MongoIncompatibleDriverException;
 import com.spring.junit.exception.movie.JunitExceptionsMovieAssignment.exceptionHandling.IdPresentException;
 import com.spring.junit.exception.movie.JunitExceptionsMovieAssignment.exceptionHandling.MovieException;
 import com.spring.junit.exception.movie.JunitExceptionsMovieAssignment.model.Movie;
@@ -28,17 +27,17 @@ public class MovieController {
     }
 
     @RequestMapping(value = "/add-movie", method = RequestMethod.POST)
-    public Movie saveMovie(@RequestBody Movie payload) throws IdPresentException {
+    public ResponseEntity<Movie> saveMovie(@RequestBody Movie payload) throws IdPresentException {
 
         if(!PayloadValidation.createdPayloadValidation(payload)) throw new IdPresentException("PAYLOAD MALFORMED. OBJECT ID MUST NOT BE DEFINED");
 
-        return service.saveMovie(payload);
+        return new ResponseEntity<>(service.saveMovie(payload), HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/get-movies", method = RequestMethod.GET)
-    public List<Movie> getMovies(){
-        return service.getMovies();
+    public ResponseEntity<List<Movie>> getMovies(){
+        return new ResponseEntity<>(service.getMovies(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/get-movie-by-id/{id}", method = RequestMethod.GET)
@@ -54,19 +53,19 @@ public class MovieController {
 
 
     @RequestMapping(value = "/update-movie", method = RequestMethod.PATCH)
-    public Movie updateMovie(@RequestBody Movie movie) throws MovieException{
+    public ResponseEntity<Movie> updateMovie(@RequestBody Movie movie) throws MovieException{
 
         Movie movieRes = service.getMovieById(movie.getId());
         if(movieRes==null){
             throw new MovieException("Movie DOESN'T EXISTS");
         }
 
-        return service.updateMovie(movie);
+        return new ResponseEntity<>(service.updateMovie(movie), HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/delete-movie/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String deleteMovie(@PathVariable("id") ObjectId id) throws MovieException {
+    public ResponseEntity<String> deleteMovie(@PathVariable("id") ObjectId id) throws MovieException {
 
         Movie movie = service.getMovieById(id);
         if(movie==null){
@@ -74,7 +73,7 @@ public class MovieController {
         }
 
         service.removeMovie(id);
-        return "{\"message\" : \"Successfully Deleted !!\"}";
+        return new ResponseEntity<>("{\"message\" : \"Successfully Deleted !!\"}", HttpStatus.OK);
     }
 
 

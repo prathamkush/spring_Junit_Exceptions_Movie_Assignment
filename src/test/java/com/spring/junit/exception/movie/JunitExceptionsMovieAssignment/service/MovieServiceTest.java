@@ -90,12 +90,4 @@ public class MovieServiceTest {
 
         verify(repository, times(1)).deleteById(movie.getId());
     }
-
-
-
-
-
-
-
-
 }
