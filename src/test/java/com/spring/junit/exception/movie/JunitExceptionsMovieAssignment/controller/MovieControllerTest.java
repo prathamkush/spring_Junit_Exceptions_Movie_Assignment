@@ -80,6 +80,19 @@ public class MovieControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    public void verifyGetMovieById_EXCEPTION() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/movie/get-movie-by-id/636dce61bfff8e1d3db94ef1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorCode").value(404))
+                .andExpect(jsonPath("$.message").value("Movie DOESN'T EXISTS"))
+                .andDo(print());
+    }
+
+
+
+
 
     @Test
     public void verfiySaveMovie() throws Exception{
@@ -97,6 +110,21 @@ public class MovieControllerTest {
 
     }
 
+    @Test
+    public void verfiySaveMovie_EXCEPTION() throws Exception{
+        Movie movie = new Movie(new ObjectId("636dcf444b7e8832baeb2607"), "MI1", "2002-10-10");
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/movie/add-movie")
+                        .content(asJsonString(movie))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(jsonPath("$.errorCode").value(400))
+                .andExpect(jsonPath("$.message").value("PAYLOAD MALFORMED. OBJECT ID MUST NOT BE DEFINED"))
+                .andDo(print());
+    }
+
+
 
     @Test
     public void verifyUpdateMovie() throws Exception{
@@ -112,6 +140,21 @@ public class MovieControllerTest {
                 .andExpect(jsonPath("$.name").value("Mission Impossible 1"))
                 .andDo(print());
     }
+
+    @Test
+    public void verifyUpdateMovie_EXCEPTION() throws Exception{
+        Movie movie = new Movie(new ObjectId("636de2fcaa778b7b8292c069"), "Mission Impossible 1", "2002-10-10");
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/movie/update-movie")
+                        .content(asJsonString(movie))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(jsonPath("$.errorCode").value(404))
+                .andExpect(jsonPath("$.message").value("Movie DOESN'T EXISTS"))
+                .andDo(print());
+    }
+
 
 
     @Test
@@ -129,28 +172,15 @@ public class MovieControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    public void verifyDeleteById_EXCEPTION() throws Exception{
 
-    // EXCEPTIONS
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        mockMvc.perform(MockMvcRequestBuilders.delete("/movie/delete-movie/636de2fcaa778b7b8292c061")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorCode").value(404))
+                .andExpect(jsonPath("$.message").value("Movie DOESN'T Exists"))
+                .andDo(print());
+    }
 
 
 
